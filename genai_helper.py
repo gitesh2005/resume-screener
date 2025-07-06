@@ -1,14 +1,23 @@
 # genai_helper.py
 
+import os
 from openai import OpenAI
+from dotenv import load_dotenv  # ✅ NEW
 
-# ✅ Step 1: Setup OpenRouter client
+# ✅ Load .env file
+load_dotenv()
+
+# ✅ Fetch key & base_url from .env
+api_key = os.getenv("OPENROUTER_API_KEY")
+base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")  
+
+# ✅ Setup OpenRouter client
 client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key="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",  # <-- replace with your OpenRouter key
+    base_url=base_url,
+    api_key=api_key,
 )
 
-# ✅ Step 2: Main function to call GPT
+# ✅ GPT caller function
 def extract_info_with_gpt(text):
     limited_text = text[:2000] if text else "No resume text found."
 
@@ -24,10 +33,10 @@ def extract_info_with_gpt(text):
     try:
         completion = client.chat.completions.create(
             extra_headers={
-                "HTTP-Referer": "https://giteshresume.ai",   # required
-                "X-Title": "GiteshResumeScreening"           # optional
+                "HTTP-Referer": "https://giteshresume.ai",
+                "X-Title": "GiteshResumeScreening"
             },
-            model="deepseek/deepseek-chat",  # ✅ use any model from https://openrouter.ai/models
+            model="deepseek/deepseek-chat",  # or any other model
             messages=[
                 {"role": "system", "content": "You are a resume assistant"},
                 {"role": "user", "content": prompt}
