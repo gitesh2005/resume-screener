@@ -1,7 +1,6 @@
 # genai_helper.py
 
 import os
-from openai import OpenAI
 from dotenv import load_dotenv  # ✅ NEW
 
 # ✅ Load .env file
