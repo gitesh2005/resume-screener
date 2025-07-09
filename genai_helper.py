@@ -1,20 +1,15 @@
 # genai_helper.py
 
 import os
-from dotenv import load_dotenv  # ✅ NEW
+import requests
+from dotenv import load_dotenv
 
 # ✅ Load .env file
 load_dotenv()
 
 # ✅ Fetch key & base_url from .env
 api_key = os.getenv("OPENROUTER_API_KEY")
-base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")  
-
-# ✅ Setup OpenRouter client
-client = OpenAI(
-    base_url=base_url,
-    api_key=api_key,
-)
+base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
 
 # ✅ GPT caller function
 def extract_info_with_gpt(text):
@@ -29,22 +24,33 @@ def extract_info_with_gpt(text):
     {limited_text}
     """
 
-    try:
-        completion = client.chat.completions.create(
-            extra_headers={
-                "HTTP-Referer": "https://giteshresume.ai",
-                "X-Title": "GiteshResumeScreening"
-            },
-            model="deepseek/deepseek-chat",  # or any other model
-            messages=[
-                {"role": "system", "content": "You are a resume assistant"},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=500,
-        )
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://giteshresume.ai",  # optional tracking
+        "X-Title": "GiteshResumeScreening"
+    }
 
-        return completion.choices[0].message.content
+    body = {
+        "model": "deepseek/deepseek-chat",  # 🔄 change model as needed
+        "messages": [
+            {"role": "system", "content": "You are a resume assistant"},
+            {"role": "user", "content": prompt}
+        ],
+        "temperature": 0.7,
+        "max_tokens": 500
+    }
+
+    try:
+        response = requests.post(
+            f"{base_url}/chat/completions",
+            headers=headers,
+            json=body
+        )
+        response.raise_for_status()
+        result = response.json()
+
+        return result["choices"][0]["message"]["content"]
 
     except Exception as e:
         return f"❌ OpenRouter Error: {str(e)}"
