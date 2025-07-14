@@ -28,7 +28,14 @@ def load_all_resumes(folder_path="data/resumes"):
         content = extract_text_from_resume(file_path)
         resume_data.append({"filename": file_name, "text": content})
     return resume_data
+from utils import extract_text  # assume you have this function
 
+def load_resume_from_file(filepath):
+    text = extract_text(filepath)
+    return {
+        "filename": filepath.split("/")[-1],
+        "text": text
+    }
 if __name__ == "__main__":
     data = load_all_resumes()
     for resume in data:

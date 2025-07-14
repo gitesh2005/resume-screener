@@ -1,24 +1,17 @@
-from resume_parser import load_all_resumes
-from jd_matcher import calculate_similarity
-
-# 1. Load job description
-with open("data/job_description.txt", "r", encoding="utf-8") as f:
-    jd_text = f.read()
-
-# 2. Load resumes
-resumes = load_all_resumes("data/resumes")
+import os
+from flask import Flask, render_template, request
+from werkzeug.utils import secure_filename
 
 from resume_parser import load_all_resumes
 from jd_matcher import calculate_similarity
+from genai_helper import extract_info_with_gpt
 
-# Load JD
-with open("data/job_description.txt", "r", encoding="utf-8") as f:
-    jd_text = f.read()
+# Flask app setup
+app = Flask(__name__)
+app.config["UPLOAD_FOLDER"] = "uploads"
+os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
-# Load resumes
-resumes = load_all_resumes("data/resumes")
-
-# Manual score-based fit logic
+# Score label logic
 def get_fit_label(score):
     if score >= 0.70:
         return "Strong"
@@ -27,22 +20,37 @@ def get_fit_label(score):
     else:
         return "Weak"
 
-# Final Output
-for res in resumes:
-    score = calculate_similarity(res["text"], jd_text)
-    label = get_fit_label(score)
-    print(f"File: {res['filename']} → Match Score: {score:.2f} → Fit: {label}")
+@app.route("/", methods=["GET", "POST"])
+def index():
+    results = []
 
+    if request.method == "POST":
+        # 1. Get job description from textarea
+        jd_text = request.form["jd_text"]
 
-from genai_helper import extract_info_with_gpt
+        # 2. Save uploaded resumes
+        resume_files = request.files.getlist("resumes")
+        for file in resume_files:
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            file.save(file_path)
 
-...
+        # 3. Process resumes
+        resumes = load_all_resumes(app.config["UPLOAD_FOLDER"])
 
-for res in resumes:
-    score = calculate_similarity(res["text"], jd_text)
-    label = get_fit_label(score)
+        for res in resumes:
+            score = calculate_similarity(res["text"], jd_text)
+            label = get_fit_label(score)
+            summary = extract_info_with_gpt(res["text"])
 
-    print(f"File: {res['filename']} → Match Score: {score:.2f} → Fit: {label}")
-    print("🔍 GPT Summary:")
-    print(extract_info_with_gpt(res["text"]))
-    print("-" * 80)
+            results.append({
+                "filename": res["filename"],
+                "score": f"{score:.2f}",
+                "fit": label,
+                "summary": summary
+            })
+
+    return render_template("index.html", results=results)
+
+if __name__ == "__main__":
+    app.run(debug=True)

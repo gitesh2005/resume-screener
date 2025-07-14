@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Screener</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📄 Resume Screener by Gitesh</h1>
+        </header>
+
+        <form method="POST" enctype="multipart/form-data">
+            <label for="jd_text">Job Description</label>
+            <textarea name="jd_text" id="jd_text" placeholder="Paste job description here...">{{ jd_text or '' }}</textarea>
+
+            <label for="resumes">Upload Resumes</label>
+            <input type="file" name="resumes" id="resumes" multiple>
+
+            <button type="submit">🔍 Analyze</button>
+        </form>
+
+        {% if results %}
+        <div class="results">
+            <h2>📊 Output</h2>
+            {% for res in results %}
+            <div class="result-block">
+                <h3>{{ res.filename }}</h3>
+                <p class="score">
+                    Match Score: {{ '{:.2f}'.format(res.score) }} →
+                    <span class="{{ res.label|lower }}">{{ res.label }}</span>
+                </p>
+                <pre>{{ res.summary }}</pre>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
