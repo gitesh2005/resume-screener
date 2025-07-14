@@ -1,1 +1,1 @@
-slq.pyhton
+sql , pyhton , numpy , pandas 

@@ -90,9 +90,11 @@ button:hover {
     color: red;
 }
 
-pre {
+.summary {
     background-color: #f0f0f0;
     padding: 10px;
     border-radius: 6px;
     white-space: pre-wrap;
+    font-size: 14px;
+    line-height: 1.5;
 }

@@ -31,7 +31,7 @@
                     Match Score: {{ '{:.2f}'.format(res.score) }} →
                     <span class="{{ res.label|lower }}">{{ res.label }}</span>
                 </p>
-                <pre>{{ res.summary }}</pre>
+                <div class="summary-block">{{ res.summary|safe }}</div>
             </div>
             {% endfor %}
         </div>

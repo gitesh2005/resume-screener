@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import os
+import markdown
 from werkzeug.utils import secure_filename
 from resume_parser import load_all_resumes
 from jd_matcher import calculate_similarity
