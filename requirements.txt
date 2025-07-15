@@ -1,12 +1,7 @@
-flask
-streamlit
-PyMuPDF
-PyPDF2
-python-docx
+Flask
+python-dotenv
 scikit-learn
 pandas
 numpy
-python-dotenv
+PyPDF2
 sentence-transformers
-markdown
-requests

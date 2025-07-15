@@ -1,1 +1,1 @@
-sql , pyhton , numpy , pandas 
+SQl , pyhton  , numpy 
