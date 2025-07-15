@@ -10,26 +10,11 @@ load_dotenv()
 api_key = os.getenv("OPENROUTER_API_KEY")
 base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
 
-# ✅ Convert GPT output into HTML
-def convert_to_html(text):
-    lines = text.strip().split("\n")
-    html_output = ""
-
-    for line in lines:
-        line = line.strip()
-        if line.startswith("-") or line.startswith("•"):
-            content = re.sub(r"^[-•]\s*", "", line)
-            html_output += f"<li>{content}</li>\n"
-        elif re.match(r"^\d+\.", line):
-            html_output += f"<br><strong>{line}</strong><br>\n"
-        elif line == "":
-            html_output += "<br>"
-        else:
-            html_output += f"<p>{line}</p>\n"
-
-    # Wrap bullet points in <ul>
-    html_output = re.sub(r"((<li>.*?</li>\n)+)", r"<ul>\1</ul>\n", html_output, flags=re.DOTALL)
-    return html_output.strip()
+# ✅ Cleanup function to remove Markdown
+def clean_gpt_output(text):
+    text = re.sub(r"[*#`_~]", "", text)  # remove symbols
+    text = re.sub(r"\n{2,}", "\n", text)  # remove extra newlines
+    return text.strip()
 
 # ✅ GPT caller function
 def extract_info_with_gpt(text):
@@ -47,12 +32,12 @@ def extract_info_with_gpt(text):
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://giteshresume.ai",
+        "HTTP-Referer": "https://giteshresume.ai",  # optional
         "X-Title": "GiteshResumeScreening"
     }
 
     body = {
-        "model": "deepseek/deepseek-chat",
+        "model": "deepseek/deepseek-chat",  # You can change this
         "messages": [
             {"role": "system", "content": "You are a resume assistant"},
             {"role": "user", "content": prompt}
@@ -69,9 +54,9 @@ def extract_info_with_gpt(text):
         )
         response.raise_for_status()
         result = response.json()
-        raw_output = result["choices"][0]["message"]["content"]
+        raw_summary = result["choices"][0]["message"]["content"]
 
-        return convert_to_html(raw_output)
+        return clean_gpt_output(raw_summary)
 
     except Exception as e:
-        return f"<p>❌ OpenRouter Error: {str(e)}</p>"
+        return f"❌ OpenRouter Error: {str(e)}"
