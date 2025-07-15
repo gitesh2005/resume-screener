@@ -9,27 +9,28 @@
     <div class="container">
         <header>
             <h1>📄 Resume Screener by Gitesh</h1>
+            <p>Upload Job Description & Candidate Resumes to see match results</p>
         </header>
 
         <form method="POST" enctype="multipart/form-data">
-            <label for="jd_text">Job Description</label>
-            <textarea name="jd_text" id="jd_text" placeholder="Paste job description here...">{{ jd_text or '' }}</textarea>
+            <label for="jd_text">📝 Job Description</label>
+            <textarea name="jd_text" id="jd_text" placeholder="Paste job description here..." required>{{ jd_text or '' }}</textarea>
 
-            <label for="resumes">Upload Resumes</label>
-            <input type="file" name="resumes" id="resumes" multiple>
+            <label for="resumes">📎 Upload Resumes (PDF/DOCX)</label>
+            <input type="file" name="resumes" id="resumes" multiple required>
 
             <button type="submit">🔍 Analyze</button>
         </form>
 
         {% if results %}
         <div class="results">
-            <h2>📊 Output</h2>
+            <h2>📊 Match Results</h2>
             {% for res in results %}
             <div class="result-block">
-                <h3>{{ res.filename }}</h3>
+                <h3>📁 {{ res.filename }}</h3>
                 <p class="score">
-                    Match Score: {{ '{:.2f}'.format(res.score) }} →
-                    <span class="{{ res.label|lower }}">{{ res.label }}</span>
+                    Match Score: <strong>{{ '{:.2f}'.format(res.score) }}</strong> →
+                    <span class="tag {{ res.label|lower }}">{{ res.label }}</span>
                 </p>
                 <div class="summary-block">{{ res.summary|safe }}</div>
             </div>

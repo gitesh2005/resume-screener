@@ -4,7 +4,6 @@ import markdown
 from werkzeug.utils import secure_filename
 from resume_parser import load_all_resumes
 from jd_matcher import calculate_similarity
-from genai_helper import extract_info_with_gpt
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "uploads"
@@ -57,7 +56,9 @@ def index():
         for res in resumes:
             score = float(calculate_similarity(res["text"], jd_text))
             label = get_fit_label(score)
-            summary = extract_info_with_gpt(res["text"])
+
+            # 🧠 GPT summary disabled for Render free deployment
+            summary = "Summary disabled on Render Free plan"
 
             results.append({
                 "filename": res["filename"],

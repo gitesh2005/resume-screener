@@ -2,18 +2,21 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', sans-serif;
-    background-color: #f0f2f5;
+    background: linear-gradient(to right, #e0f7fa, #ffffff);  /* Gradient Background */
+    min-height: 100vh;
 }
 
+/* Container / Card */
 .container {
     max-width: 900px;
     margin: 50px auto;
     padding: 30px;
-    background-color: #fff;
+    background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Header */
 header {
     text-align: center;
     margin-bottom: 30px;
@@ -25,6 +28,7 @@ header h1 {
     margin: 10px 0;
 }
 
+/* Form Labels */
 label {
     display: block;
     font-weight: 600;
@@ -32,6 +36,7 @@ label {
     color: #444;
 }
 
+/* Input Fields */
 textarea,
 input[type="file"] {
     width: 100%;
@@ -40,8 +45,10 @@ input[type="file"] {
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 15px;
+    resize: vertical;
 }
 
+/* Submit Button */
 button {
     margin-top: 20px;
     background-color: #007bff;
@@ -51,13 +58,14 @@ button {
     border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
     background-color: #0056b3;
 }
 
+/* Results Section */
 .results {
     margin-top: 40px;
     padding: 20px;
@@ -66,6 +74,7 @@ button:hover {
     border-radius: 10px;
 }
 
+/* Each Resume Block */
 .result-block {
     margin-bottom: 30px;
 }
@@ -75,26 +84,32 @@ button:hover {
     color: #007bff;
 }
 
+/* Score Styling */
 .score {
     font-weight: bold;
     font-size: 15px;
 }
 
+/* Score Labels */
 .strong {
     color: green;
 }
+
 .moderate {
     color: orange;
 }
+
 .weak {
     color: red;
 }
 
-.summary {
+/* Summary Styling */
+.summary-block {
     background-color: #f0f0f0;
-    padding: 10px;
+    padding: 12px;
     border-radius: 6px;
-    white-space: pre-wrap;
     font-size: 14px;
     line-height: 1.5;
+    white-space: pre-wrap;
+    margin-top: 10px;
 }

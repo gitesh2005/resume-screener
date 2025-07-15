@@ -1,7 +1,9 @@
-Flask
-python-dotenv
+flask
+PyMuPDF
+python-docx
 scikit-learn
 pandas
 numpy
-PyPDF2
+python-dotenv
 sentence-transformers
+PyPDF2
