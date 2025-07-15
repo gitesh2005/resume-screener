@@ -1,11 +1,12 @@
 flask
 streamlit
 PyMuPDF
+PyPDF2
 python-docx
 scikit-learn
 pandas
 numpy
 python-dotenv
 sentence-transformers
-PyPDF2
 markdown
+requests
