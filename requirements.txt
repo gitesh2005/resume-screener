@@ -1,10 +1,7 @@
 flask
-PyMuPDF
-python-docx
 scikit-learn
-pandas
+openai
 numpy
-python-dotenv
-sentence-transformers
-PyPDF2
-markdown
+pandas
+joblib
+gunicorn
