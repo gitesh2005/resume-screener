@@ -4,11 +4,11 @@ scikit-learn
 numpy
 pandas
 joblib
-requests # You use 'requests' for OpenRouter, so 'openai' might not be strictly needed if only used for this API.
+requests
 python-dotenv
 # --- Start of PyTorch/Sentence-Transformers optimization ---
 # Get the latest compatible CPU-only torch version from pytorch.org/get-started/locally/
-# For example, for Python 3.9 on Linux, it might be:
+# For example, for Python 3.9 on Linux, a common version is:
 torch==2.3.0+cpu # This attempts to pull CPU if available via default PyPI.
 sentence-transformers
 # --- End of PyTorch/Sentence-Transformers optimization ---
