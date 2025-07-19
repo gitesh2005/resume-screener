@@ -1,1 +1,1 @@
-numpy, pandas , sql , pyhton , java , 
+ai resume , java  , pandas 

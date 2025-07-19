@@ -43,7 +43,7 @@ def extract_info_with_gpt(text):
             {"role": "user", "content": prompt}
         ],
         "temperature": 0.7,
-        "max_tokens": 500
+        "max_tokens": 10000
     }
 
     try:

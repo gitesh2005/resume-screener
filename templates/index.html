@@ -29,7 +29,7 @@
             <div class="result-block">
                 <h3>📁 {{ res.filename }}</h3>
                 <p class="score">
-                    Match Score: <strong>{{ '{:.2f}'.format(res.score) }}</strong> →
+                    Match Score: {{ res.score }} →
                     <span class="tag {{ res.label|lower }}">{{ res.label }}</span>
                 </p>
                 <div class="summary-block">{{ res.summary|safe }}</div>
