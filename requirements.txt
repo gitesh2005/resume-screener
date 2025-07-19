@@ -7,9 +7,12 @@ joblib
 requests
 python-dotenv
 # --- Start of PyTorch/Sentence-Transformers optimization ---
-# Get the latest compatible CPU-only torch version from pytorch.org/get-started/locally/
-# For example, for Python 3.9 on Linux, a common version is:
-torch==2.3.0+cpu # This attempts to pull CPU if available via default PyPI.
+# IMPORTANT: The version of torch below (2.3.0+cpu) is an example.
+# You MUST find the correct CPU-only version for Render's Python environment.
+# Go to pytorch.org/get-started/locally/, select 'Linux', 'Pip', 'Python', 'CPU'.
+# Note down the exact version (e.g., torch==2.5.1) and use it here.
+# For example, if Render is using Python 3.12, the PyTorch site will give you a specific version.
+torch==2.3.0+cpu # Replace 2.3.0 with the actual version you find on PyTorch site for CPU.
 sentence-transformers
 # --- End of PyTorch/Sentence-Transformers optimization ---
 PyMuPDF
