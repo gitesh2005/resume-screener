@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Resume Screener</title>
+    <title>Resume Screener by Gitesh</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <div class="container">
         <header>
             <h1>📄 Resume Screener by Gitesh</h1>
-            <p>Upload Job Description & Candidate Resumes to see match results</p>
+            <p>Upload a Job Description and candidate resumes to see match scores and summaries.</p>
         </header>
 
         <form method="POST" enctype="multipart/form-data">
@@ -23,19 +24,21 @@
         </form>
 
         {% if results %}
-        <div class="results">
+        <section class="results">
             <h2>📊 Match Results</h2>
             {% for res in results %}
             <div class="result-block">
                 <h3>📁 {{ res.filename }}</h3>
                 <p class="score">
-                    Match Score: {{ res.score }} →
+                    Match Score: <strong>{{ res.score }}%</strong>
                     <span class="tag {{ res.label|lower }}">{{ res.label }}</span>
                 </p>
-                <div class="summary-block">{{ res.summary|safe }}</div>
+                <div class="summary-block">
+                    <pre>{{ res.summary }}</pre>
+                </div>
             </div>
             {% endfor %}
-        </div>
+        </section>
         {% endif %}
     </div>
 </body>

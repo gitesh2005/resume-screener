@@ -1,19 +1,17 @@
 from flask import Flask, request, render_template
 import os
+import tempfile
 from werkzeug.utils import secure_filename
 from resume_parser import load_all_resumes
 from jd_matcher import calculate_similarity
 from genai_helper import extract_info_with_gpt
 
 app = Flask(__name__)
-app.config["UPLOAD_FOLDER"] = "uploads"
-app.config["RESUME_FOLDER"] = "data/resumes"
-app.config["JD_FILE"] = "data/job_description.txt"
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5MB limit
+app.config["ALLOWED_EXTENSIONS"] = {"pdf", "doc", "docx", "txt"}
 
-# Ensure necessary folders exist
-os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
-os.makedirs(app.config["RESUME_FOLDER"], exist_ok=True)
-os.makedirs("data", exist_ok=True)
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config["ALLOWED_EXTENSIONS"]
 
 def get_fit_label(score):
     if score >= 70:
@@ -29,42 +27,37 @@ def index():
     jd_text = ""
 
     if request.method == "POST":
-        # Clear previous resumes
-        for f in os.listdir(app.config["RESUME_FOLDER"]):
-            os.remove(os.path.join(app.config["RESUME_FOLDER"], f))
-
-        # Save JD
         jd_text = request.form.get("jd_text", "")
-        if jd_text:
-            with open(app.config["JD_FILE"], "w", encoding="utf-8") as f:
-                f.write(jd_text)
-
-        # Save resumes
         uploaded_files = request.files.getlist("resumes")
-        for file in uploaded_files:
-            if file.filename:
-                filename = secure_filename(file.filename)
-                filepath = os.path.join(app.config["RESUME_FOLDER"], filename)
-                file.save(filepath)
 
-        # Load & match
-        with open(app.config["JD_FILE"], "r", encoding="utf-8") as f:
-            jd_text = f.read()
+        if not jd_text.strip() or not uploaded_files:
+            return render_template("index.html", results=[], jd_text=jd_text, error="Please provide both JD and resumes.")
 
-        resumes = load_all_resumes(app.config["RESUME_FOLDER"])
+        with tempfile.TemporaryDirectory() as temp_dir:
+            resume_paths = []
 
-        for res in resumes:
-            raw_score = calculate_similarity(res["text"], jd_text)
-            score = int(raw_score * 100)  # ✅ convert to integer
-            label = get_fit_label(score)
-            summary = extract_info_with_gpt(res["text"])
+            for file in uploaded_files:
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    temp_path = os.path.join(temp_dir, filename)
+                    file.save(temp_path)
+                    resume_paths.append(temp_path)
 
-            results.append({
-                "filename": res["filename"],
-                "score": score,
-                "label": label,
-                "summary": summary
-            })
+            # Load resumes
+            resumes = load_all_resumes(temp_dir)
+
+            for res in resumes:
+                raw_score = calculate_similarity(res["text"], jd_text)
+                score = int(raw_score * 100)
+                label = get_fit_label(score)
+                summary = extract_info_with_gpt(res["text"])
+
+                results.append({
+                    "filename": res["filename"],
+                    "score": score,
+                    "label": label,
+                    "summary": summary
+                })
 
     return render_template("index.html", results=results, jd_text=jd_text)
 

@@ -1,7 +1,12 @@
-flask
+Flask
+gunicorn
 scikit-learn
-openai
 numpy
 pandas
 joblib
-gunicorn
+openai
+requests
+sentence-transformers
+PyMuPDF
+python-docx
+python-dotenv
