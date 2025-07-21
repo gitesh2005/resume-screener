@@ -12,8 +12,9 @@ load_dotenv()
 
 # Retrieve API key and base URL from environment variables.
 # This is crucial for security - NEVER hardcode your API key.
-api_key = os.getenv("OPENROUTER_API_KEY")
-base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+import streamlit as st
+api_key = st.secrets["openrouter"]["api_key"]
+base_url = st.secrets["openrouter"]["base_url"]
 
 def clean_gpt_output(text):
     """Cleans markdown and extra newlines from GPT output."""
